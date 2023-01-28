@@ -1,25 +1,36 @@
-//
-//  ViewController.swift
-//  Core Data
-//
-//  Created by Abhiram Nagadi on 26/01/23.
-//
+import UIKit;
 
-import UIKit
+enum Rotation {
+    case up, down
+}
 
 struct ArrowProperties {
     let color: UIColor;
     let circleColor: UIColor;
     let width: CGFloat;
+    let rotation: Rotation;
+}
+
+extension UIColor {
+    static var DarkGreen: UIColor {
+        return UIColor(red: 24/255, green: 219/255, blue: 63/255, alpha: 1);
+    }
+    
+    static var LightGreen: UIColor {
+        return UIColor(red: 212/255, green: 250/255, blue: 220/255, alpha: 1);
+    }
 }
 
 class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let properties: ArrowProperties = ArrowProperties(color: .red, circleColor: .blue, width: 30);
+        let properties: ArrowProperties = ArrowProperties(color: .DarkGreen, circleColor: .LightGreen, width: 100, rotation: .up);
         let arrow = Arrow(property: properties);
         view.addSubview(arrow);
+        
+        arrow.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true;
+        arrow.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40).isActive = true;
     }
 }
 
@@ -27,7 +38,7 @@ class Arrow: UIView {
     let properties: ArrowProperties;
     
     required init?(coder: NSCoder) {
-        self.properties = ArrowProperties(color: .red, circleColor: .green, width: 200);
+        self.properties = ArrowProperties(color: .red, circleColor: .green, width: 200, rotation: .up);
         super.init(coder: coder);
     }
     
@@ -53,9 +64,14 @@ class Arrow: UIView {
         translatesAutoresizingMaskIntoConstraints = false;
         widthAnchor.constraint(equalToConstant: properties.width).isActive = true;
         heightAnchor.constraint(equalToConstant: properties.width).isActive = true;
-        topAnchor.constraint(equalTo: superview!.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true;
-        leadingAnchor.constraint(equalTo: superview!.leadingAnchor, constant: 40).isActive = true;
         layer.cornerRadius = properties.width / 2;
+        
+        switch properties.rotation {
+            case .down:
+                transform = CGAffineTransform(rotationAngle: .pi / 2);
+            case .up:
+                transform = CGAffineTransform(rotationAngle: 0);            
+        }
         
         centerLine.backgroundColor = properties.color;
         centerLine.translatesAutoresizingMaskIntoConstraints = false;
