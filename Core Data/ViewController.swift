@@ -7,51 +7,80 @@
 
 import UIKit
 
+struct ArrowProperties {
+    let color: UIColor;
+    let circleColor: UIColor;
+    let width: CGFloat;
+}
+
 class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        let container = UIView();
+        
+        let properties: ArrowProperties = ArrowProperties(color: .red, circleColor: .blue, width: 30);
+        let arrow = Arrow(property: properties);
+        view.addSubview(arrow);
+    }
+}
+
+class Arrow: UIView {
+    let properties: ArrowProperties;
+    
+    required init?(coder: NSCoder) {
+        self.properties = ArrowProperties(color: .red, circleColor: .green, width: 200);
+        super.init(coder: coder);
+    }
+    
+    init(property: ArrowProperties) {
+        self.properties = property;
+        super.init(frame: .zero);
+    }
+    
+    override func didMoveToSuperview() {
+        self.initialise();
+    }
+    
+    private func initialise() {
         let centerLine = UIView();
         let leftAngleView = UIView();
         let rightAngleView = UIView();
         
-        view.addSubview(container);
-        container.addSubview(centerLine);
-        container.addSubview(leftAngleView);
-        container.addSubview(rightAngleView);
+        addSubview(centerLine);
+        addSubview(leftAngleView);
+        addSubview(rightAngleView);
         
-        container.backgroundColor = .green;
-        container.translatesAutoresizingMaskIntoConstraints = false;
-        container.widthAnchor.constraint(equalToConstant: 200).isActive = true;
-        container.heightAnchor.constraint(equalToConstant: 200).isActive = true;
-        container.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true;
-        container.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40).isActive = true;
-        container.layer.cornerRadius = 100;
+        backgroundColor = properties.circleColor;
+        translatesAutoresizingMaskIntoConstraints = false;
+        widthAnchor.constraint(equalToConstant: properties.width).isActive = true;
+        heightAnchor.constraint(equalToConstant: properties.width).isActive = true;
+        topAnchor.constraint(equalTo: superview!.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true;
+        leadingAnchor.constraint(equalTo: superview!.leadingAnchor, constant: 40).isActive = true;
+        layer.cornerRadius = properties.width / 2;
         
-        centerLine.backgroundColor = .red;
+        centerLine.backgroundColor = properties.color;
         centerLine.translatesAutoresizingMaskIntoConstraints = false;
-        centerLine.widthAnchor.constraint(equalTo: container.widthAnchor, multiplier: 0.1).isActive = true;
-        centerLine.heightAnchor.constraint(equalTo: container.heightAnchor, multiplier: 0.7).isActive = true;
-        centerLine.centerXAnchor.constraint(equalTo: container.centerXAnchor).isActive = true;
-        centerLine.centerYAnchor.constraint(equalTo: container.centerYAnchor).isActive = true;
-        centerLine.layer.cornerRadius = 10;
+        centerLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.1).isActive = true;
+        centerLine.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.7).isActive = true;
+        centerLine.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true;
+        centerLine.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true;
+        centerLine.layer.cornerRadius = properties.width * 0.05;
         
-        leftAngleView.backgroundColor = .red;
+        leftAngleView.backgroundColor = properties.color;
         leftAngleView.translatesAutoresizingMaskIntoConstraints = false;
         leftAngleView.widthAnchor.constraint(equalTo: centerLine.widthAnchor).isActive = true;
         leftAngleView.heightAnchor.constraint(equalTo: centerLine.heightAnchor, multiplier: 0.6).isActive = true;
-        leftAngleView.centerXAnchor.constraint(equalTo: container.centerXAnchor, constant: -25).isActive = true;
-        leftAngleView.topAnchor.constraint(equalTo: centerLine.topAnchor, constant: -8).isActive = true;
+        leftAngleView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -(properties.width * 0.13)).isActive = true;
+        leftAngleView.topAnchor.constraint(equalTo: centerLine.topAnchor, constant: -(properties.width * 0.04)).isActive = true;
         leftAngleView.transform = CGAffineTransform(rotationAngle: 10.2);
-        leftAngleView.layer.cornerRadius = 10;
+        leftAngleView.layer.cornerRadius = properties.width * 0.05;
         
-        rightAngleView.backgroundColor = .red;
+        rightAngleView.backgroundColor = properties.color;
         rightAngleView.translatesAutoresizingMaskIntoConstraints = false;
         rightAngleView.widthAnchor.constraint(equalTo: centerLine.widthAnchor).isActive = true;
         rightAngleView.heightAnchor.constraint(equalTo: centerLine.heightAnchor, multiplier: 0.6).isActive = true;
-        rightAngleView.centerXAnchor.constraint(equalTo: container.centerXAnchor, constant: 25).isActive = true;
-        rightAngleView.topAnchor.constraint(equalTo: centerLine.topAnchor, constant: -8).isActive = true;
+        rightAngleView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: (properties.width * 0.13)).isActive = true;
+        rightAngleView.topAnchor.constraint(equalTo: centerLine.topAnchor, constant: -(properties.width * 0.04)).isActive = true;
         rightAngleView.transform = CGAffineTransform(rotationAngle: -10.2);
-        rightAngleView.layer.cornerRadius = 10;
+        rightAngleView.layer.cornerRadius = properties.width * 0.05;
     }
 }
